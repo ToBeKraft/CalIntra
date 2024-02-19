@@ -1,12 +1,12 @@
 function formatDate(element) {
-    // Format date to YYYY-MM-DD to let us match it with the calendar dates 
+    // Format date to YYYY-MM-DD to let us match it with the calendar dates
     // (which are also formatted like this from Improved Intra)
     const dayElement = element.querySelector('.date-day');
     const monthElement = element.querySelector('.date-month');
     const day = parseInt(dayElement.textContent, 10);
     const dayFormatted = day < 10 ? '0' + day : day;
     const monthName = monthElement.textContent;
-    const currentYear = new Date().getFullYear(); 
+    const currentYear = new Date().getFullYear();
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     const monthIndex = monthNames.indexOf(monthName) + 1;
     const monthFormatted = monthIndex < 10 ? '0' + monthIndex : monthIndex;
@@ -18,7 +18,7 @@ async function getSubscribedEvents() {
     // Get the list of subscribed events from the Agenda HTML
     const eventElements = Array.from(document.querySelectorAll('div.event-item'));
     const events = [];
-    
+
     for (const eventElement of eventElements) {
         if (eventElement.querySelector('span.event-registered') === null) {
             // If the event is not subscribed,
@@ -51,7 +51,7 @@ function fillCalendarTillMonthEnd() {
     // Try to get a day with no presence hours, to copy the style. This will let
     // CalIntra ti work with any theme. This part will be improved in the future
     const lastDayWithoutPresence = document.querySelector('g[data-original-title="0h00 (0h00)"]');
-    
+
     // it should be today but let's parse the date just in case
     const date = new Date(lastElement.getAttribute('data-iidate'));
 
@@ -62,7 +62,7 @@ function fillCalendarTillMonthEnd() {
     // we get the difference days
     let daysLeft = lastDay - currentDay;
 
-    // we need to parse the first X of both the elements, to know where the 
+    // we need to parse the first X of both the elements, to know where the
     // new lines are going to start
     var lastX = parseInt(lastElement.querySelector('rect').getAttribute('x'), 10);
     const firxtRectX = lastX - (date.getDay() * 18);
@@ -75,10 +75,10 @@ function fillCalendarTillMonthEnd() {
         // we parse the last created sub-elements
         var rect = last.querySelector('rect');
         var text = last.querySelector('text');
-        
+
         // we select the element to clone
         const newElement = lastDayWithoutPresence ? lastDayWithoutPresence.cloneNode(true) : last.cloneNode(true);
-        
+
         // we get the next day date
         const newDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
 
@@ -92,7 +92,7 @@ function fillCalendarTillMonthEnd() {
         newElement.setAttribute('data-iidate', newDateFormatted);
         // no daily hours obv
         // this can be customized in the future
-        newElement.setAttribute('data-original-title', '0h00'); 
+        newElement.setAttribute('data-original-title', '0h00');
 
         // We set other details
         let new_rect = newElement.querySelector('rect')
@@ -110,7 +110,7 @@ function fillCalendarTillMonthEnd() {
         new_text.setAttribute('x', x + 18);
 
         // if is last day of week, change y position of rect and text
-        if (date.getDay() === 6) {
+        if (date.getDay() === 7) {
             var y = parseInt(rect.getAttribute('y'), 10);
             new_rect.setAttribute('y', y + 18);
             var y = parseInt(text.getAttribute('y'), 10);
@@ -120,7 +120,7 @@ function fillCalendarTillMonthEnd() {
             new_rect.setAttribute('x', firxtRectX);
             new_text.setAttribute('x', firxtTextX);
         } else {
-            // else we use the same y position, since we may have 
+            // else we use the same y position, since we may have
             // parsed the first day with no presence hours
             new_rect.setAttribute('y', rect.getAttribute('y'));
             new_text.setAttribute('y', text.getAttribute('y'));
@@ -132,10 +132,10 @@ function fillCalendarTillMonthEnd() {
             placement: 'top',
             trigger: 'hover'
         });
-        
+
         // Add the day to the page
         lastElement.parentNode.appendChild(newElement);
-        
+
         // change the date
         date.setDate(date.getDate() + 1);
 
